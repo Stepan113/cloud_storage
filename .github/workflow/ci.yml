@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Checkstyle
+        run: ./gradlew checkAll
+
+      - name: Show Checkstyle results
+        if: ${{ !cancelled() }}
+        uses: gmazzo/publish-report-annotations@v1
+        with:
+          reports: 'reports/checkstyle/*.xml'
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - run: docker compose up -d --wait postgres
+
+      - name: Tests and JaCoCo report
+        run: ./gradlew test jacocoTestReport
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/cloud
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+
+      - name: Show test results
+        if: ${{ !cancelled() }}
+        uses: gmazzo/publish-report-annotations@v1
+        with:
+          reports: 'build/test-results/test/*.xml'
+
+      - name: Show coverage
+        uses: jjmrocha/jacoco-summary@v1
+        with:
+          jacoco-csv-file: reports/jacoco/test/jacocoTestReport.csv
+
+      - name: Check coverage threshold
+        run: ./gradlew jacocoTestCoverageVerification
