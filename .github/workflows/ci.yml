@@ -33,8 +33,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - run: docker compose up -d --wait postgres
-
       - name: Tests and JaCoCo report
         run: ./gradlew test jacocoTestReport
 
