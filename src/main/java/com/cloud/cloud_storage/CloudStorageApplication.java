@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SuppressWarnings({"HideUtilityClassConstructor", "UncommentedMain"})
 public class CloudStorageApplication {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(CloudStorageApplication.class, args);
     }
 

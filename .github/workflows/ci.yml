@@ -37,10 +37,6 @@ jobs:
 
       - name: Tests and JaCoCo report
         run: ./gradlew test jacocoTestReport
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/cloud
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
 
       - name: Show test results
         if: ${{ !cancelled() }}
