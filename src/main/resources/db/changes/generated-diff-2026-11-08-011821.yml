@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1794084698372-1
+    id: 1794086305837-1
     author: shaman_stepan (generated)
     changes:
     - createTable:
@@ -9,7 +9,7 @@ databaseChangeLog:
             constraints:
               nullable: false
               primaryKey: true
-              primaryKeyName: ResourcePK
+              primaryKeyName: resourcePK
             name: uuid
             type: VARCHAR(255)
         - column:
@@ -32,26 +32,26 @@ databaseChangeLog:
         - column:
             name: parent_id
             type: VARCHAR(255)
-        tableName: Resource
+        tableName: resource
 - changeSet:
-    id: 1794084698372-2
+    id: 1794086305837-2
     author: shaman_stepan (generated)
     changes:
     - addUniqueConstraint:
         columnNames: object_key
         constraintName: UC_RESOURCEOBJECT_KEY_COL
-        tableName: Resource
+        tableName: resource
 - changeSet:
-    id: 1794084698372-3
+    id: 1794086305837-3
     author: shaman_stepan (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: parent_id
-        baseTableName: Resource
-        constraintName: FK4sclokaklpo0heynjw8evtdqx
+        baseTableName: resource
+        constraintName: FKs2byvqo0b2enh3rltln5mmvyl
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: uuid
-        referencedTableName: Resource
+        referencedTableName: resource
         validate: true
 
