@@ -14,6 +14,7 @@ plugins {
     id 'org.springframework.boot' version '4.1.2'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'checkstyle'
+    id 'jacoco'
     id 'org.liquibase.gradle' version '3.1.0'
 }
 
@@ -25,6 +26,11 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.projectDirectory.dir("reports/jacoco")
 }
 
 ext {
@@ -118,6 +124,25 @@ tasks.withType(Checkstyle).configureEach {
 
 tasks.register('checkAll') {
     dependsOn(tasks.named("checkstyleMain"), tasks.named("checkstyleTest"))
+}
+
+// Блок для jacoco
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required = true
+        csv.required = false
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80
+            }
+        }
+    }
 }
 
 tasks.named('test') {
