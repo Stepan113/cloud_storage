@@ -6,7 +6,8 @@ build/
 !**/src/test/**/build/
 
 .env
-
+gradle.properties
+reports/**
 
 ### STS ###
 .apt_generated
