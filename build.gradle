@@ -13,6 +13,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.2'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'checkstyle'
     id 'org.liquibase.gradle' version '3.1.0'
 }
 
@@ -98,6 +99,26 @@ tasks.register("generateDiff") {
     finalizedBy diffChangelog
 }
 diffChangelog.dependsOn compileJava
+
+// Блок для checkstyle
+checkstyle {
+    toolVersion = '12.1.1'
+    configFile = file('config/checkstyle/checkstyle.xml')
+    reportsDir = file('reports/checkstyle')
+    maxErrors = 0
+    maxWarnings = 0
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        html.required = true
+        xml.required = false
+    }
+}
+
+tasks.register('checkAll') {
+    dependsOn(tasks.named("checkstyleMain"), tasks.named("checkstyleTest"))
+}
 
 tasks.named('test') {
     useJUnitPlatform()
