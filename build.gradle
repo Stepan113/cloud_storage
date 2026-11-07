@@ -1,7 +1,19 @@
+// Надстройка для совместимости новой версии gradle 9.7.1 и liquibase.gradle 3.1.0
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.liquibase:liquibase-core:5.0.3'
+    }
+}
+
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.2'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.liquibase.gradle' version '3.1.0'
 }
 
 group = 'com.cloud'
@@ -14,6 +26,14 @@ java {
     }
 }
 
+ext {
+    timestamp = new Date().format("yyyy-MM-dd-HHmmss")
+}
+
+configurations {
+    liquibaseRuntime.extendsFrom runtimeClasspath
+}
+
 repositories {
     mavenCentral()
 }
@@ -23,17 +43,61 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-liquibase'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
     compileOnly 'org.projectlombok:lombok'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
+
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-liquibase-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
     testCompileOnly 'org.projectlombok:lombok'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    liquibaseRuntime 'org.liquibase:liquibase-core:5.0.3'
+    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate7:5.0.3'
+    liquibaseRuntime 'jakarta.persistence:jakarta.persistence-api:3.2.0'
+    liquibaseRuntime 'info.picocli:picocli:4.7.6'
+    liquibaseRuntime sourceSets.main.runtimeClasspath
+    liquibaseRuntime sourceSets.main.output
 }
+
+// Настройка liquibase
+liquibase {
+    activities {
+        main {
+            changelogFile "db/changelog/db.changelog-master.yaml"
+            url project.findProperty('db.url')
+            username project.findProperty('db.username')
+            password project.findProperty('db.password')
+            referenceUrl "hibernate:spring:com.cloud.cloud_storage.entity?dialect=org.hibernate.dialect.PostgreSQLDialect"
+            logLevel project.findProperty('db.logLevel')
+        }
+    }
+}
+
+tasks.register("generateDiff") {
+    group = "liquibase"
+    description = "Generate diff between DB and JPA entities"
+    doFirst() {
+        liquibase {
+            activities {
+                main {
+                    changelogFile "src/main/resources/db/changes/generated-diff-${timestamp}.yml"
+                }
+            }
+        }
+    }
+    finalizedBy diffChangelog
+}
+diffChangelog.dependsOn compileJava
 
 tasks.named('test') {
     useJUnitPlatform()
