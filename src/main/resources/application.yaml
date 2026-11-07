@@ -9,6 +9,6 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   liquibase:
     enabled: false

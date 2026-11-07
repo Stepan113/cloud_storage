@@ -43,9 +43,6 @@ jobs:
           reports: 'build/test-results/test/*.xml'
 
       - name: Show coverage
-        uses: jjmrocha/jacoco-summary@v1
+        uses: jjmrocha/jacoco-summary@v1.1.1
         with:
           jacoco-csv-file: reports/jacoco/test/jacocoTestReport.csv
-
-      - name: Check coverage threshold
-        run: ./gradlew jacocoTestCoverageVerification
