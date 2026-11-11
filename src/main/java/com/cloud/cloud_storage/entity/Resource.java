@@ -27,6 +27,10 @@ public class Resource {
     @JoinColumn(name = "parent_id")
     private Resource parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Enumerated(value = EnumType.STRING)
     private ResourceType type;
 
