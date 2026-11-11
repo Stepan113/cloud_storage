@@ -1,0 +1,56 @@
+databaseChangeLog:
+- changeSet:
+    id: 1794393640913-1
+    author: shaman_stepan (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: hash_password
+            type: VARCHAR(255)
+        - column:
+            name: username
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1794393640913-2
+    author: shaman_stepan (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        tableName: resource
+- changeSet:
+    id: 1794393640913-3
+    author: shaman_stepan (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: username
+        constraintName: UC_USERSUSERNAME_COL
+        tableName: users
+- changeSet:
+    id: 1794393640913-4
+    author: shaman_stepan (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: resource
+        constraintName: FK9rx1aalrihjvhx59gmmurhuns
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
