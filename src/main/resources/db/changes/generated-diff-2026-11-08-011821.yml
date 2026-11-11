@@ -1,0 +1,57 @@
+databaseChangeLog:
+- changeSet:
+    id: 1794086305837-1
+    author: shaman_stepan (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: resourcePK
+            name: uuid
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: object_key
+            type: VARCHAR(255)
+        - column:
+            name: size_bytes
+            type: BIGINT
+        - column:
+            name: type
+            type: VARCHAR(255)
+        - column:
+            name: parent_id
+            type: VARCHAR(255)
+        tableName: resource
+- changeSet:
+    id: 1794086305837-2
+    author: shaman_stepan (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: object_key
+        constraintName: UC_RESOURCEOBJECT_KEY_COL
+        tableName: resource
+- changeSet:
+    id: 1794086305837-3
+    author: shaman_stepan (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: parent_id
+        baseTableName: resource
+        constraintName: FKs2byvqo0b2enh3rltln5mmvyl
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: uuid
+        referencedTableName: resource
+        validate: true
+
